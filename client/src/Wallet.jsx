@@ -1,6 +1,7 @@
 import server from "./server";
 
-function Wallet({ address, setAddress, balance, setBalance }) {
+function Wallet({ address, setAddress, balance, setBalance, transactionHistory, setTransactionHistory }) {
+
   async function onChange(evt) {
     const address = evt.target.value;
     setAddress(address);
@@ -11,6 +12,13 @@ function Wallet({ address, setAddress, balance, setBalance }) {
       setBalance(balance);
     } else {
       setBalance(0);
+    }
+
+    if (address) {
+      const {
+        data: { transactions },
+      } = await server.get(`transactions/${address}`);
+      setTransactionHistory(transactions)
     }
   }
 
@@ -24,6 +32,7 @@ function Wallet({ address, setAddress, balance, setBalance }) {
       </label>
 
       <div className="balance">Balance: {balance}</div>
+      <div className="balance">Transactions: {transactionHistory}</div>
     </div>
   );
 }
